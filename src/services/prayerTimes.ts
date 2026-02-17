@@ -45,7 +45,7 @@ export async function fetchRamadanTimetable(region: Region): Promise<DayTimetabl
 
   for (const period of periods) {
     try {
-      const resp = await fetch(`/api-namoz/?format=json&region=${regionSlug}&period=${period}`);
+      const resp = await fetch(`/api-namoz?format=json&region=${regionSlug}&period=${period}`);
       if (resp.ok) {
         const data = await resp.json();
         if (data && data.period_table) {

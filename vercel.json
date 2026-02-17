@@ -1,8 +1,16 @@
 {
   "rewrites": [
     {
+      "source": "/api-namoz",
+      "destination": "https://namoz-vaqti.uz/"
+    },
+    {
       "source": "/api-namoz/:path*",
       "destination": "https://namoz-vaqti.uz/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
