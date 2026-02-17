@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api-namoz/:path*",
+      "destination": "https://namoz-vaqti.uz/:path*"
+    }
+  ]
+}
