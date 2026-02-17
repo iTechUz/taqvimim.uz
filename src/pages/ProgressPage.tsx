@@ -2,6 +2,7 @@ import { useRamadan } from '@/context/RamadanContext';
 import { getChecklistForDate, calculateStreak } from '@/hooks/useChecklist';
 import ShareCard from '@/components/ShareCard';
 import { useMemo } from 'react';
+import { Flame, TrendingUp, Calendar, CheckCircle2 } from 'lucide-react';
 
 export default function ProgressPage() {
   const { timetable, todayIndex } = useRamadan();
@@ -30,20 +31,27 @@ export default function ProgressPage() {
     };
   }, [timetable]);
 
+  const statCards = [
+    { label: 'Tugatilgan kunlar', value: `${stats.completedDays}/${stats.totalDays}`, icon: CheckCircle2, color: 'text-green-500' },
+    { label: 'Streak', value: `${stats.streak} 🔥`, icon: Flame, color: 'text-primary' },
+    { label: "O'rtacha bajarilish", value: `${stats.avgCompletion}%`, icon: TrendingUp, color: 'text-blue-400' },
+    { label: 'Ramazon kuni', value: `${Math.max((todayIndex ?? -1) + 1, 0)}/${stats.totalDays}`, icon: Calendar, color: 'text-muted-foreground' },
+  ];
+
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
       <h1 className="text-xl font-bold mb-4">Natijalar</h1>
 
       <div className="grid grid-cols-2 gap-3 mb-6">
-        {[
-          { label: 'Tugatilgan kunlar', value: `${stats.completedDays}/${stats.totalDays}` },
-          { label: 'Streak', value: `${stats.streak} 🔥` },
-          { label: "O'rtacha bajarilish", value: `${stats.avgCompletion}%` },
-          { label: 'Ramazon kuni', value: `${Math.max((todayIndex ?? -1) + 1, 0)}/${stats.totalDays}` },
-        ].map((stat, i) => (
-          <div key={i} className="bg-card rounded-2xl p-4 border border-border text-center">
-            <p className="text-2xl font-bold">{stat.value}</p>
-            <p className="text-[11px] text-muted-foreground mt-1">{stat.label}</p>
+        {statCards.map((stat, i) => (
+          <div
+            key={i}
+            className="glass-strong rounded-2xl p-4 border border-border/50 text-center card-elevated animate-fade-in-up"
+            style={{ animationDelay: `${i * 0.08}s`, animationFillMode: 'both' }}
+          >
+            <stat.icon size={18} className={`mx-auto mb-2 ${stat.color}`} />
+            <p className="text-2xl font-extrabold">{stat.value}</p>
+            <p className="text-[11px] text-muted-foreground mt-1 font-medium">{stat.label}</p>
           </div>
         ))}
       </div>

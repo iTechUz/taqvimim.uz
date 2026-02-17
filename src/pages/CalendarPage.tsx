@@ -1,8 +1,9 @@
 import { useRamadan } from '@/context/RamadanContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Check } from 'lucide-react';
 import type { DayTimetable } from '@/services/prayerTimes';
+import { getChecklistForDate } from '@/hooks/useChecklist';
 
 export default function CalendarPage() {
   const { timetable, loading, region } = useRamadan();
@@ -24,32 +25,36 @@ export default function CalendarPage() {
       <h1 className="text-xl font-bold mb-0.5">Ramazon Taqvimi</h1>
       <p className="text-sm text-muted-foreground mb-4">{region.displayNameUz} · {timetable.length} kun</p>
 
-      <div className="space-y-1.5">
-        {timetable.map(day => {
+      <div className="space-y-2">
+        {timetable.map((day, i) => {
           const isToday = day.dateGregorian === todayStr;
           const isPast = day.dateGregorian < todayStr;
+          const cl = isPast ? getChecklistForDate(day.dateGregorian) : null;
+          const dayDone = cl ? cl.roza && cl.namoz : false;
+
           return (
             <button
               key={day.day}
               onClick={() => setSelected(day)}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all min-h-[56px] active:scale-[0.98] ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border transition-all duration-200 min-h-[60px] active:scale-[0.98] card-elevated animate-fade-in-up ${
                 isToday
-                  ? 'bg-primary/10 border-primary/30'
+                  ? 'glass border-primary/30 glow-sm'
                   : isPast
-                  ? 'bg-card/50 border-border opacity-60'
-                  : 'bg-card border-border hover:bg-secondary'
+                  ? 'glass-strong border-border/30 opacity-70'
+                  : 'glass-strong border-border/50 hover:border-primary/20'
               }`}
+              style={{ animationDelay: `${i * 0.02}s`, animationFillMode: 'both' }}
             >
               <div className="flex items-center gap-3">
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                  isToday ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground'
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
+                  isToday ? 'gradient-gold text-primary-foreground glow-sm' : dayDone ? 'bg-green-500/15 text-green-500' : 'bg-secondary text-foreground'
                 }`}>
-                  {day.day}
+                  {dayDone ? <Check size={16} /> : day.day}
                 </span>
-                <span className="text-sm">{day.dateGregorian}</span>
+                <span className="text-sm font-medium">{day.dateGregorian}</span>
               </div>
               <div className="flex items-center gap-4 text-sm">
-                <span className="text-muted-foreground font-mono">{day.saharlik}</span>
+                <span className="text-muted-foreground font-mono text-xs">{day.saharlik}</span>
                 <span className="font-bold text-primary font-mono">{day.iftor}</span>
               </div>
             </button>
@@ -58,7 +63,7 @@ export default function CalendarPage() {
       </div>
 
       <Sheet open={!!selected} onOpenChange={() => setSelected(null)}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
+        <SheetContent side="bottom" className="rounded-t-3xl glass-strong border-t border-border/50">
           {selected && (
             <>
               <SheetHeader>
@@ -67,13 +72,13 @@ export default function CalendarPage() {
               <div className="mt-4 space-y-4 pb-6">
                 <p className="text-sm text-muted-foreground">{selected.dateGregorian} · {selected.dateHijri}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-secondary rounded-2xl p-5 text-center">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">Saharlik</p>
-                    <p className="text-3xl font-bold">{selected.saharlik}</p>
+                  <div className="glass rounded-2xl p-5 text-center border border-border/50">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Saharlik</p>
+                    <p className="text-3xl font-extrabold">{selected.saharlik}</p>
                   </div>
-                  <div className="bg-secondary rounded-2xl p-5 text-center">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">Iftor</p>
-                    <p className="text-3xl font-bold text-primary">{selected.iftor}</p>
+                  <div className="glass rounded-2xl p-5 text-center border border-primary/20 glow-sm">
+                    <p className="text-[10px] text-primary uppercase tracking-widest font-bold mb-1">Iftor</p>
+                    <p className="text-3xl font-extrabold text-primary">{selected.iftor}</p>
                   </div>
                 </div>
               </div>

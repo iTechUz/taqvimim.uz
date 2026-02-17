@@ -2,16 +2,17 @@ import { useRamadan } from '@/context/RamadanContext';
 import { useChecklist, type ChecklistState } from '@/hooks/useChecklist';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { calculateStreak } from '@/hooks/useChecklist';
 
-const items: { key: keyof ChecklistState; label: string; group: 'must' | 'habit' }[] = [
-  { key: 'roza', label: "Ro'za", group: 'must' },
-  { key: 'namoz', label: '5 vaqt namoz', group: 'must' },
-  { key: 'quron', label: "Qur'on (10 daq)", group: 'habit' },
-  { key: 'zikr', label: 'Zikr / Duo', group: 'habit' },
-  { key: 'sadaqa', label: 'Sadaqa', group: 'habit' },
-  { key: 'goodDeed', label: 'Yaxshi amal', group: 'habit' },
+const items: { key: keyof ChecklistState; label: string; emoji: string; group: 'must' | 'habit' }[] = [
+  { key: 'roza', label: "Ro'za", emoji: '🌙', group: 'must' },
+  { key: 'namoz', label: '5 vaqt namoz', emoji: '🕌', group: 'must' },
+  { key: 'quron', label: "Qur'on (10 daq)", emoji: '📖', group: 'habit' },
+  { key: 'zikr', label: 'Zikr / Duo', emoji: '🤲', group: 'habit' },
+  { key: 'sadaqa', label: 'Sadaqa', emoji: '💝', group: 'habit' },
+  { key: 'goodDeed', label: 'Yaxshi amal', emoji: '⭐', group: 'habit' },
 ];
 
 export default function ChecklistPage() {
@@ -28,27 +29,36 @@ export default function ChecklistPage() {
   const selectedDay = timetable[selectedIdx];
   const selectedDate = selectedDay?.dateGregorian || todayStr;
   const { state, toggle, progress } = useChecklist(selectedDate);
+  const streak = useMemo(() => calculateStreak(timetable), [timetable]);
 
   const canPrev = selectedIdx > 0;
   const canNext = selectedIdx < timetable.length - 1;
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
-      <h1 className="text-xl font-bold mb-0.5">Kunlik amallar</h1>
+      <div className="flex items-center justify-between mb-3">
+        <h1 className="text-xl font-bold">Kunlik amallar</h1>
+        {streak > 0 && (
+          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <Flame size={14} className="text-primary" />
+            <span className="text-xs font-bold text-primary">{streak}</span>
+          </div>
+        )}
+      </div>
 
       {/* Day selector */}
       {timetable.length > 0 && (
-        <div className="flex items-center justify-between bg-card rounded-2xl border border-border px-3 py-2.5 mb-4">
+        <div className="flex items-center justify-between glass-strong rounded-2xl border border-border/50 px-2 py-2 mb-4 card-elevated">
           <button
             onClick={() => canPrev && setSelectedIdx(i => i - 1)}
             disabled={!canPrev}
-            className="p-2 rounded-xl hover:bg-secondary transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="p-2 rounded-xl hover:bg-secondary transition-all duration-200 disabled:opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-90"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={() => setSelectedIdx(todayIdx)}
-            className="text-center flex-1"
+            className="text-center flex-1 py-1 rounded-xl hover:bg-secondary/50 transition-colors"
           >
             <p className="text-sm font-bold">Ramazon {selectedDay?.day}-kun</p>
             <p className="text-xs text-muted-foreground">{selectedDate}{selectedDate === todayStr ? ' · Bugun' : ''}</p>
@@ -56,7 +66,7 @@ export default function ChecklistPage() {
           <button
             onClick={() => canNext && setSelectedIdx(i => i + 1)}
             disabled={!canNext}
-            className="p-2 rounded-xl hover:bg-secondary transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="p-2 rounded-xl hover:bg-secondary transition-all duration-200 disabled:opacity-20 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-90"
           >
             <ChevronRight size={20} />
           </button>
@@ -64,22 +74,27 @@ export default function ChecklistPage() {
       )}
 
       {/* Progress */}
-      <div className="bg-card rounded-2xl p-4 border border-border mb-5">
+      <div className="glass-strong rounded-2xl p-4 border border-border/50 mb-5 card-elevated">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-sm font-medium">Bugungi natija</span>
-          <span className="text-sm font-bold text-primary">{progress}%</span>
+          <span className="text-sm font-semibold">Bugungi natija</span>
+          <span className={`text-sm font-extrabold ${progress === 100 ? 'text-green-500' : 'text-primary'}`}>{progress}%</span>
         </div>
         <Progress value={progress} className="h-2.5" />
+        {progress === 100 && (
+          <p className="text-xs text-green-500 font-medium mt-2 text-center animate-fade-in">🎉 Barcha amallar bajarildi!</p>
+        )}
       </div>
 
       {/* Must */}
       <div className="mb-5">
         <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Farz</h2>
-        <div className="bg-card rounded-2xl border border-border divide-y divide-border">
+        <div className="glass-strong rounded-2xl border border-border/50 divide-y divide-border/50 card-elevated overflow-hidden">
           {items.filter(i => i.group === 'must').map(item => (
-            <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[52px] cursor-pointer active:bg-secondary transition-colors">
+            <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[56px] cursor-pointer active:bg-secondary/50 transition-all duration-200">
               <Checkbox checked={state[item.key]} onCheckedChange={() => toggle(item.key)} className="w-5 h-5" />
-              <span className={`text-sm font-medium ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
+              <span className="text-lg">{item.emoji}</span>
+              <span className={`text-sm font-medium transition-all duration-300 ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
+              {state[item.key] && <span className="ml-auto text-xs text-green-500/80">✓</span>}
             </label>
           ))}
         </div>
@@ -88,11 +103,13 @@ export default function ChecklistPage() {
       {/* Habits */}
       <div>
         <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Odatlar</h2>
-        <div className="bg-card rounded-2xl border border-border divide-y divide-border">
+        <div className="glass-strong rounded-2xl border border-border/50 divide-y divide-border/50 card-elevated overflow-hidden">
           {items.filter(i => i.group === 'habit').map(item => (
-            <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[52px] cursor-pointer active:bg-secondary transition-colors">
+            <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[56px] cursor-pointer active:bg-secondary/50 transition-all duration-200">
               <Checkbox checked={state[item.key]} onCheckedChange={() => toggle(item.key)} className="w-5 h-5" />
-              <span className={`text-sm font-medium ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
+              <span className="text-lg">{item.emoji}</span>
+              <span className={`text-sm font-medium transition-all duration-300 ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
+              {state[item.key] && <span className="ml-auto text-xs text-green-500/80">✓</span>}
             </label>
           ))}
         </div>
