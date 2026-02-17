@@ -7,6 +7,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      '/api-namoz': {
+        target: 'https://namoz-vaqti.uz',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-namoz/, ''),
+      },
+    },
     hmr: {
       overlay: false,
     },

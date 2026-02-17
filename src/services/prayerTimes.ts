@@ -6,14 +6,25 @@ export interface DayTimetable {
   dateHijri: string;
   saharlik: string; // HH:MM
   iftor: string; // HH:MM
+  tong_saharlik: string;
+  quyosh: string;
+  peshin: string;
+  asr: string;
+  shom_iftor: string;
+  hufton: string;
 }
 
-function parseTime(timeStr: string): string {
-  return timeStr.replace(/\s*\(.*\)/, '').trim();
-}
+const RAMADAN_2026_START_DATE = '2026-02-19';
 
 function getCacheKey(regionKey: string): string {
-  return `ramadan_2026_${regionKey}`;
+  return `ramadan_2026_namozvaqti_v1_${regionKey}`;
+}
+
+function convertDate(dateStr: string): string {
+  if (!dateStr || !dateStr.includes('.')) return '2026-02-19'; // Fallback
+  // DD.MM.YYYY to YYYY-MM-DD
+  const [d, m, y] = dateStr.split('.');
+  return `${y}-${m}-${d}`;
 }
 
 export async function fetchRamadanTimetable(region: Region): Promise<DayTimetable[]> {
@@ -26,45 +37,65 @@ export async function fetchRamadanTimetable(region: Region): Promise<DayTimetabl
     } catch { /* ignore */ }
   }
 
-  const baseUrl = 'https://api.aladhan.com/v1/calendar';
-  const params = `latitude=${region.lat}&longitude=${region.lng}&method=3`;
+  const regionSlug = region.apiRegion || 'toshkent-shahri';
+  
+  // Fetch Feb, March, and April 2026 to cover Ramadan
+  const periods = ['2026-02', '2026-03', '2026-04'];
+  const allDays: any[] = [];
 
-  // Fetch Feb, March, and April 2026 to cover full Ramadan
-  const responses = await Promise.all([
-    fetch(`${baseUrl}/2026/2?${params}`),
-    fetch(`${baseUrl}/2026/3?${params}`),
-    fetch(`${baseUrl}/2026/4?${params}`),
-  ]);
-
-  for (const r of responses) {
-    if (!r.ok) throw new Error('API request failed');
+  for (const period of periods) {
+    try {
+      const resp = await fetch(`/api-namoz/?format=json&region=${regionSlug}&period=${period}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && data.period_table) {
+          allDays.push(...data.period_table);
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to fetch period ${period}:`, e);
+    }
   }
 
-  const jsons = await Promise.all(responses.map(r => r.json()));
-  const allDays = [...(jsons[0].data || []), ...(jsons[1].data || []), ...(jsons[2].data || [])];
-
-  // Filter only Ramadan days (Hijri month 9)
-  const ramadanDays = allDays.filter((d: any) =>
-    d.date?.hijri?.month?.number === 9
-  );
-
-  if (ramadanDays.length === 0) {
-    throw new Error('No Ramadan data found');
+  if (allDays.length === 0) {
+    throw new Error('Ma\'lumot topilmadi');
   }
 
-  const timetable: DayTimetable[] = ramadanDays.map((entry: any, index: number) => {
-    const greg = entry.date.gregorian;
-    const dateStr = `${greg.year}-${String(greg.month.number).padStart(2, '0')}-${String(greg.day).padStart(2, '0')}`;
+  // Filter for Ramadan days (starting Feb 19, 2026, for 30 days)
+  // Since the API doesn't provide Hijri month name in period_table, we use the known start date.
+  const startDate = new Date(RAMADAN_2026_START_DATE);
+  
+  const ramadanTimetable: DayTimetable[] = allDays
+    .map((d: any) => ({
+      ...d,
+      gregorian: convertDate(d.date)
+    }))
+    .filter((d: any) => {
+      const currentDate = new Date(d.gregorian);
+      return currentDate >= startDate;
+    })
+    .slice(0, 30)
+    .map((entry: any, index: number) => {
+      return {
+        day: index + 1,
+        dateGregorian: entry.gregorian,
+        dateHijri: `Ramazon ${index + 1}`,
+        saharlik: entry.times.bomdod,
+        iftor: entry.times.shom,
+        tong_saharlik: entry.times.bomdod,
+        quyosh: entry.times.quyosh,
+        peshin: entry.times.peshin,
+        asr: entry.times.asr,
+        shom_iftor: entry.times.shom,
+        hufton: entry.times.xufton,
+      };
+    });
 
-    return {
-      day: index + 1,
-      dateGregorian: dateStr,
-      dateHijri: entry.date.hijri.date,
-      saharlik: parseTime(entry.timings.Fajr),
-      iftor: parseTime(entry.timings.Maghrib),
-    };
-  });
+  if (ramadanTimetable.length === 0) {
+    throw new Error('Ramazon ma\'lumotlari topilmadi');
+  }
 
-  localStorage.setItem(cacheKey, JSON.stringify(timetable));
-  return timetable;
+  localStorage.setItem(cacheKey, JSON.stringify(ramadanTimetable));
+  return ramadanTimetable;
 }
+

@@ -20,7 +20,7 @@ export default function Home() {
   const countdown = useCountdown(todayEntry?.saharlik, todayEntry?.iftor);
   const navigate = useNavigate();
 
-  if (loading) {
+  if (loading && !todayEntry) {
     return (
       <div className="flex items-center justify-center min-h-screen pb-20">
         <div className="text-center animate-fade-in">
@@ -33,18 +33,7 @@ export default function Home() {
     );
   }
 
-  if (error && timetable.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen pb-20 px-6">
-        <div className="text-center animate-fade-in">
-          <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto">
-            <WifiOff className="w-7 h-7 text-muted-foreground" />
-          </div>
-          <p className="text-foreground font-semibold mt-4">{error}</p>
-        </div>
-      </div>
-    );
-  }
+  const isRamadan = todayEntry && timetable.some(d => d.dateGregorian === todayEntry.dateGregorian);
 
   return (
     <div className="pb-24 px-4 pt-2 animate-fade-in">
@@ -63,7 +52,7 @@ export default function Home() {
       <p className="text-sm text-muted-foreground mt-1 mb-3 px-0.5">{getGreeting()}</p>
 
       {/* Hero Card */}
-      {todayEntry ? (
+      {isRamadan ? (
         <div className="gradient-hero rounded-3xl p-5 border border-primary/10 shimmer card-elevated relative overflow-hidden">
           <div className="absolute top-3 right-3 opacity-10">
             <Sparkles className="w-20 h-20 text-primary" />
@@ -90,19 +79,56 @@ export default function Home() {
       ) : (
         <div className="gradient-hero rounded-3xl p-6 border border-white/10 text-center shimmer card-elevated">
           <div className="text-4xl mb-3">🌙</div>
-          <p className="text-lg font-bold mb-1 text-white">Ramazon taqvimi</p>
+          <p className="text-lg font-bold mb-1 text-white">Ramazon yaqinlashmoqda</p>
           <p className="text-sm text-white/80">
             {timetable.length > 0
-              ? `Ramazon ${timetable[0].dateGregorian} dan boshlanadi`
-              : "Ma'lumot topilmadi"}
+              ? `Ramazon 2026-yil ${timetable[0].day === 1 ? '19-fevraldan' : timetable[0].dateGregorian + ' dan'} boshlanadi`
+              : "Taqvim yuklanmoqda..."}
           </p>
         </div>
       )}
 
-      {/* Countdown */}
-      {countdown && (
+      {/* Countdown (Only if Ramadan) */}
+      {isRamadan && countdown && (
         <div className="glass-strong rounded-2xl p-4 border border-border/50 mt-3 card-elevated animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
           <CountdownTimer {...countdown} />
+        </div>
+      )}
+
+      {/* Today's All Timings (Always show if available) */}
+      {todayEntry && (
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-sm font-bold flex items-center gap-2">
+              <Calendar size={16} className="text-primary" />
+              Bugungi namoz vaqtlari
+            </h2>
+            <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-full font-bold">
+              {todayEntry.dateGregorian}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { label: 'Bomdod', time: todayEntry.tong_saharlik, icon: '🌅' },
+              { label: 'Quyosh', time: todayEntry.quyosh, icon: '⛅' },
+              { label: 'Peshin', time: todayEntry.peshin, icon: '📖' },
+              { label: 'Asr', time: todayEntry.asr, icon: '🕋' },
+              { label: 'Shom', time: todayEntry.shom_iftor, icon: '🌙' },
+              { label: 'Xufton', time: todayEntry.hufton, icon: '✨' },
+            ].map((t, i) => (
+              <div
+                key={t.label}
+                className="glass-strong rounded-2xl p-3 border border-border/40 flex items-center justify-between hover:border-primary/20 transition-all animate-fade-in-up"
+                style={{ animationDelay: `${0.2 + i * 0.05}s`, animationFillMode: 'both' }}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">{t.icon}</span>
+                  <span className="text-xs font-semibold text-muted-foreground">{t.label}</span>
+                </div>
+                <span className="text-sm font-bold font-mono text-primary">{t.time}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -117,7 +143,7 @@ export default function Home() {
             key={action.path}
             onClick={() => navigate(action.path)}
             className="glass-strong rounded-2xl p-4 border border-border/50 flex flex-col items-center gap-2 min-h-[88px] hover:border-primary/30 active:scale-95 transition-all duration-200 card-elevated animate-fade-in-up"
-            style={{ animationDelay: `${0.15 + i * 0.05}s`, animationFillMode: 'both' }}
+            style={{ animationDelay: `${0.5 + i * 0.05}s`, animationFillMode: 'both' }}
           >
             <span className="text-2xl">{action.emoji}</span>
             <span className="text-xs font-semibold">{action.label}</span>
@@ -126,7 +152,7 @@ export default function Home() {
       </div>
 
       {/* Motivational quote */}
-      <div className="mt-6 glass rounded-2xl p-4 border border-border/30 animate-fade-in-up" style={{ animationDelay: '0.35s', animationFillMode: 'both' }}>
+      <div className="mt-6 glass rounded-2xl p-4 border border-border/30 animate-fade-in-up" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
         <p className="text-sm text-center text-muted-foreground italic leading-relaxed">
           "Ro'za tutgan kishi iftorlik qilganida uning duosi rad etilmaydi."
         </p>
