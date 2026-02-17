@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 export interface ChecklistState {
   roza: boolean;
@@ -32,6 +32,10 @@ export function getChecklistForDate(date: string): ChecklistState {
 
 export function useChecklist(date: string) {
   const [state, setState] = useState<ChecklistState>(() => getChecklistForDate(date));
+
+  useEffect(() => {
+    setState(getChecklistForDate(date));
+  }, [date]);
 
   const toggle = useCallback((key: keyof ChecklistState) => {
     setState(prev => {
