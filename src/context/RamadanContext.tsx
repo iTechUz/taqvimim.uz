@@ -58,7 +58,7 @@ export function RamadanProvider({ children }: { children: ReactNode }) {
 
     // Fetch Today's Extra Data (for pre-Ramadan or general use)
     const regionSlug = region.apiRegion || 'toshkent-shahri';
-    fetch(`/api-namoz/?format=json&region=${regionSlug}&period=today`)
+    fetch(`/api-namoz?format=json&region=${regionSlug}&period=today`)
       .then(res => res.json())
       .then(data => {
         if (cancelled) return;
