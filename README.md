@@ -1,73 +1,47 @@
-# Welcome to your Lovable project
+# iTech Academy — Ramazon Taqvimi
 
-## Project info
+Ushbu loyiha **iTech Academy** o'quv markazi tomonidan ishlab chiqilgan Ramazon taqvimi ilovasidir.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Loyiha haqida
 
-## How can I edit this code?
+Bu ilova foydalanuvchilarga quyidagi imkoniyatlarni taqdim etadi:
+- O'zbekiston bo'ylab barcha viloyatlar uchun aniq saharlik va iftor vaqtlari.
+- Saharlik va iftorlik duolari.
+- Kunlik amallar va eslatmalar.
+- Qulay va zamonaviy dizayn.
 
-There are several ways of editing your application.
+## Texnologiyalar
 
-**Use Lovable**
+Loyiha quyidagi texnologiyalar asosida qurilgan:
+- **Vite** — tezkor yig'ish vositasi.
+- **React** — foydalanuvchi interfeysi kutubxonasi.
+- **TypeScript** — xavfsiz va tushunarli kod yozish uchun.
+- **Tailwind CSS** — zamonaviy uslublar uchun.
+- **Shadcn UI** — tayyor va chiroyli komponentlar to'plami.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## O'rnatish va Ishga tushirish
 
-Changes made via Lovable will be committed automatically to this repo.
+Loyihani o'z kompyuteringizda ishga tushirish uchun quyidagi qadamlarni bajaring:
 
-**Use your preferred IDE**
+1. **Repozitoriyni klonlash:**
+   ```bash
+   git clone <REPO_URL>
+   cd <PROJECT_FOLDER>
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Karakli kutubxonalarni o'rnatish:**
+   ```bash
+   npm install
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Loyihani ishga tushirish:**
+   ```bash
+   npm run dev
+   ```
 
-Follow these steps:
+## Muallif
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+**iTech Academy** — Zamonaviy kasblar o'quv markazi.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+© 2026 iTech Academy. Barcha huquqlar himoyalangan.

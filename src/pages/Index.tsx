@@ -70,28 +70,28 @@ export default function Home() {
           </div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-1">
-              <h1 className="text-lg font-bold text-foreground">Ramazon — {todayEntry.day}-kun</h1>
+              <h1 className="text-lg font-bold text-white">Ramazon — {todayEntry.day}-kun</h1>
               {countdown && <StatusChip status={countdown.status} />}
             </div>
-            <p className="text-sm text-muted-foreground">{todayEntry.dateGregorian} · {todayEntry.dateHijri}</p>
+            <p className="text-sm text-white/80">{todayEntry.dateGregorian} · {todayEntry.dateHijri}</p>
 
             <div className="grid grid-cols-2 gap-3 mt-4">
-              <div className="glass rounded-2xl p-3.5 text-center border border-border/50">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-1">Saharlik</p>
-                <p className="text-2xl font-extrabold tracking-tight">{todayEntry.saharlik}</p>
+              <div className="glass rounded-2xl p-3.5 text-center border border-white/10 bg-white/10 backdrop-blur-md">
+                <p className="text-[10px] text-white/70 uppercase tracking-wider font-semibold mb-1">Saharlik</p>
+                <p className="text-2xl font-extrabold tracking-tight text-white">{todayEntry.saharlik}</p>
               </div>
-              <div className="glass rounded-2xl p-3.5 text-center border border-primary/20 glow-sm">
-                <p className="text-[10px] text-primary uppercase tracking-wider font-semibold mb-1">Iftor</p>
-                <p className="text-2xl font-extrabold text-primary tracking-tight">{todayEntry.iftor}</p>
+              <div className="glass rounded-2xl p-3.5 text-center border border-white/20 bg-white/10 backdrop-blur-md glow-sm">
+                <p className="text-[10px] text-white uppercase tracking-wider font-semibold mb-1">Iftor</p>
+                <p className="text-2xl font-extrabold text-white tracking-tight">{todayEntry.iftor}</p>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="gradient-hero rounded-3xl p-6 border border-primary/10 text-center shimmer card-elevated">
+        <div className="gradient-hero rounded-3xl p-6 border border-white/10 text-center shimmer card-elevated">
           <div className="text-4xl mb-3">🌙</div>
-          <p className="text-lg font-bold mb-1">Ramazon taqvimi</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-lg font-bold mb-1 text-white">Ramazon taqvimi</p>
+          <p className="text-sm text-white/80">
             {timetable.length > 0
               ? `Ramazon ${timetable[0].dateGregorian} dan boshlanadi`
               : "Ma'lumot topilmadi"}

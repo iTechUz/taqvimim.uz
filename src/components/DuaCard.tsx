@@ -29,7 +29,7 @@ export default function DuaCard({ dua, isFavorite, onToggleFavorite }: Props) {
       </div>
 
       <div className="gradient-hero rounded-xl p-5 border border-border/30" dir="rtl">
-        <p className="text-xl leading-[2.4] text-foreground" style={{ fontFamily: "'Amiri', 'Traditional Arabic', serif" }}>
+        <p className="text-xl leading-[2.4] text-white" style={{ fontFamily: "'Amiri', 'Traditional Arabic', serif" }}>
           {dua.arabic}
         </p>
       </div>
