@@ -2,6 +2,8 @@ import { useRamadan } from '@/context/RamadanContext';
 import { useChecklist, type ChecklistState } from '@/hooks/useChecklist';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 const items: { key: keyof ChecklistState; label: string; group: 'must' | 'habit' }[] = [
   { key: 'roza', label: "Ro'za", group: 'must' },
@@ -13,16 +15,52 @@ const items: { key: keyof ChecklistState; label: string; group: 'must' | 'habit'
 ];
 
 export default function ChecklistPage() {
-  const { todayEntry } = useRamadan();
+  const { timetable } = useRamadan();
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  const { state, toggle, progress } = useChecklist(todayStr);
+
+  const todayIdx = useMemo(() => {
+    const idx = timetable.findIndex(d => d.dateGregorian === todayStr);
+    return idx >= 0 ? idx : 0;
+  }, [timetable, todayStr]);
+
+  const [selectedIdx, setSelectedIdx] = useState(todayIdx);
+  const selectedDay = timetable[selectedIdx];
+  const selectedDate = selectedDay?.dateGregorian || todayStr;
+  const { state, toggle, progress } = useChecklist(selectedDate);
+
+  const canPrev = selectedIdx > 0;
+  const canNext = selectedIdx < timetable.length - 1;
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
       <h1 className="text-xl font-bold mb-0.5">Kunlik amallar</h1>
-      {todayEntry && (
-        <p className="text-sm text-muted-foreground mb-4">Ramazon {todayEntry.day}-kun · {todayStr}</p>
+
+      {/* Day selector */}
+      {timetable.length > 0 && (
+        <div className="flex items-center justify-between bg-card rounded-2xl border border-border px-3 py-2.5 mb-4">
+          <button
+            onClick={() => canPrev && setSelectedIdx(i => i - 1)}
+            disabled={!canPrev}
+            className="p-2 rounded-xl hover:bg-secondary transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={() => setSelectedIdx(todayIdx)}
+            className="text-center flex-1"
+          >
+            <p className="text-sm font-bold">Ramazon {selectedDay?.day}-kun</p>
+            <p className="text-xs text-muted-foreground">{selectedDate}{selectedDate === todayStr ? ' · Bugun' : ''}</p>
+          </button>
+          <button
+            onClick={() => canNext && setSelectedIdx(i => i + 1)}
+            disabled={!canNext}
+            className="p-2 rounded-xl hover:bg-secondary transition-colors disabled:opacity-30 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
       )}
 
       {/* Progress */}
