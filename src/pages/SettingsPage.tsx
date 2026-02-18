@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes';
 import { Check, Moon, Sun, Bell, Info, ChevronLeft } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function SettingsPage() {
   const { regionKey, setRegionKey } = useRamadan();
@@ -12,26 +13,29 @@ export default function SettingsPage() {
 
   return (
     <div className="pb-10 px-4 pt-4 animate-fade-in">
-      <div className="flex items-center gap-2 mb-5">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-secondary min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors">
-          <ChevronLeft size={22} />
-        </button>
-        <h1 className="text-xl font-bold">Sozlamalar</h1>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-secondary min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors">
+            <ChevronLeft size={22} />
+          </button>
+          <h1 className="text-xl font-bold">Sozlamalar</h1>
+        </div>
+        <ThemeToggle />
       </div>
 
       {/* Region */}
       <div className="mb-6">
         <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Viloyat</h2>
-        <div className="bg-card rounded-2xl border border-border divide-y divide-border max-h-[280px] overflow-y-auto">
+        <div className="bg-card rounded-2xl border border-border divide-y divide-border max-h-[400px] overflow-y-auto card-elevated">
           {regions.map(r => (
             <button
               key={r.key}
               onClick={() => setRegionKey(r.key)}
-              className={`w-full flex items-center justify-between px-4 py-3 min-h-[48px] transition-colors ${r.key === regionKey ? 'bg-primary/10' : 'hover:bg-secondary active:bg-secondary'
+              className={`w-full flex items-center justify-between px-4 py-4 min-h-[56px] transition-all duration-200 ${r.key === regionKey ? 'bg-primary/10 text-primary' : 'hover:bg-secondary active:bg-secondary/50'
                 }`}
             >
-              <span className="text-sm font-medium">{r.displayNameUz}</span>
-              {r.key === regionKey && <Check size={16} className="text-primary" />}
+              <span className="text-sm font-semibold">{r.displayNameUz}</span>
+              {r.key === regionKey && <Check size={18} className="text-primary" />}
             </button>
           ))}
         </div>

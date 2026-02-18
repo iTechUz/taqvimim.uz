@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { calculateStreak } from '@/hooks/useChecklist';
+import PageHeader from '@/components/PageHeader';
 
 const items: { key: keyof ChecklistState; label: string; emoji: string; group: 'must' | 'habit' }[] = [
   { key: 'roza', label: "Ro'za", emoji: '🌙', group: 'must' },
@@ -36,15 +37,14 @@ export default function ChecklistPage() {
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
-      <div className="flex items-center justify-between mb-3">
-        <h1 className="text-xl font-bold">Kunlik amallar</h1>
+      <PageHeader title="Kunlik amallar">
         {streak > 0 && (
           <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
             <Flame size={14} className="text-primary" />
             <span className="text-xs font-bold text-primary">{streak}</span>
           </div>
         )}
-      </div>
+      </PageHeader>
 
       {/* Day selector */}
       {timetable.length > 0 && (

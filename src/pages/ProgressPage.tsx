@@ -3,6 +3,7 @@ import { getChecklistForDate, calculateStreak } from '@/hooks/useChecklist';
 import ShareCard from '@/components/ShareCard';
 import { useMemo } from 'react';
 import { Flame, TrendingUp, Calendar, CheckCircle2 } from 'lucide-react';
+import PageHeader from '@/components/PageHeader';
 
 export default function ProgressPage() {
   const { timetable, todayIndex } = useRamadan();
@@ -46,7 +47,7 @@ export default function ProgressPage() {
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
-      <h1 className="text-xl font-bold mb-4">Natijalar</h1>
+      <PageHeader title="Natijalar" />
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         {statCards.map((stat, i) => (

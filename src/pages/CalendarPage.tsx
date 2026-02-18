@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Loader2, Check } from 'lucide-react';
 import type { DayTimetable } from '@/services/prayerTimes';
 import { getChecklistForDate } from '@/hooks/useChecklist';
+import PageHeader from '@/components/PageHeader';
 
 export default function CalendarPage() {
   const { timetable, loading, region } = useRamadan();
@@ -22,8 +23,7 @@ export default function CalendarPage() {
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
-      <h1 className="text-xl font-bold mb-0.5">Ramazon Taqvimi</h1>
-      <p className="text-sm text-muted-foreground mb-4">{region.displayNameUz} · {timetable.length} kun</p>
+      <PageHeader title="Ramazon Taqvimi" subtitle={`${region.displayNameUz} · ${timetable.length} kun`} />
 
       <div className="space-y-2">
         {timetable.map((day, i) => {
@@ -36,19 +36,17 @@ export default function CalendarPage() {
             <button
               key={day.day}
               onClick={() => setSelected(day)}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border transition-all duration-200 min-h-[60px] active:scale-[0.98] card-elevated animate-fade-in-up ${
-                isToday
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border transition-all duration-200 min-h-[60px] active:scale-[0.98] card-elevated animate-fade-in-up ${isToday
                   ? 'glass border-primary/30 glow-sm'
                   : isPast
-                  ? 'glass-strong border-border/30 opacity-70'
-                  : 'glass-strong border-border/50 hover:border-primary/20'
-              }`}
+                    ? 'glass-strong border-border/30 opacity-70'
+                    : 'glass-strong border-border/50 hover:border-primary/20'
+                }`}
               style={{ animationDelay: `${i * 0.02}s`, animationFillMode: 'both' }}
             >
               <div className="flex items-center gap-3">
-                <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
-                  isToday ? 'gradient-gold text-primary-foreground glow-sm' : dayDone ? 'bg-green-500/15 text-green-500' : 'bg-secondary text-foreground'
-                }`}>
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${isToday ? 'gradient-gold text-primary-foreground glow-sm' : dayDone ? 'bg-green-500/15 text-green-500' : 'bg-secondary text-foreground'
+                  }`}>
                   {dayDone ? <Check size={16} /> : day.day}
                 </span>
                 <span className="text-sm font-medium">{day.dateGregorian}</span>

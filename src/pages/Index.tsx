@@ -5,6 +5,7 @@ import RegionSelector from '@/components/RegionSelector';
 import StatusChip from '@/components/StatusChip';
 import { Settings, BookOpen, CheckSquare, Calendar, Loader2, WifiOff, Sparkles, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '@/components/ThemeToggle';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -40,12 +41,15 @@ export default function Home() {
       {/* Top Bar */}
       <div className="flex items-center justify-between py-2">
         <RegionSelector selectedKey={regionKey} onSelect={setRegionKey} />
-        <button
-          onClick={() => navigate('/settings')}
-          className="p-2.5 rounded-xl hover:bg-secondary transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
-        >
-          <Settings size={20} className="text-muted-foreground" />
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            onClick={() => navigate('/settings')}
+            className="p-2.5 rounded-xl hover:bg-secondary transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-95"
+          >
+            <Settings size={20} className="text-muted-foreground" />
+          </button>
+        </div>
       </div>
 
       {/* Greeting */}

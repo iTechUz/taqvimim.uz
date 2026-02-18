@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { duas } from '@/data/duas';
 import DuaCard from '@/components/DuaCard';
+import PageHeader from '@/components/PageHeader';
 
 const tabs = [
   { key: 'saharlik', label: 'Saharlik' },
@@ -28,18 +29,17 @@ export default function DuasPage() {
 
   return (
     <div className="pb-24 px-4 pt-4 animate-fade-in">
-      <h1 className="text-xl font-bold mb-4">Duolar</h1>
+      <PageHeader title="Duolar" />
 
       <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all min-h-[40px] whitespace-nowrap ${
-              tab === t.key
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all min-h-[40px] whitespace-nowrap ${tab === t.key
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-secondary text-secondary-foreground'
-            }`}
+              }`}
           >
             {t.label}
           </button>

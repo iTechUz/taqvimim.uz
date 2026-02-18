@@ -20,20 +20,23 @@ export default function RegionSelector({ selectedKey, onSelect }: Props) {
           <span>{selected?.displayNameUz || 'Viloyat'}</span>
         </button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-3xl max-h-[70vh]">
-        <SheetHeader>
-          <SheetTitle className="text-left">Viloyatni tanlang</SheetTitle>
-        </SheetHeader>
-        <div className="overflow-y-auto mt-4 space-y-0.5 pb-6">
+      <SheetContent side="bottom" className="rounded-t-3xl max-h-[85vh] flex flex-col p-0">
+        <div className="p-6 pb-2">
+          <SheetHeader>
+            <SheetTitle className="text-left font-bold">Viloyatni tanlang</SheetTitle>
+          </SheetHeader>
+        </div>
+        <div className="overflow-y-auto px-6 pb-8 space-y-1">
           {regions.map(r => (
             <button
               key={r.key}
               onClick={() => { onSelect(r.key); setOpen(false); }}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-colors min-h-[48px] ${
-                r.key === selectedKey ? 'bg-primary/10' : 'hover:bg-secondary'
-              }`}
+              className={`w-full flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-200 min-h-[56px] active:scale-95 ${r.key === selectedKey
+                  ? 'bg-primary/15 text-primary border border-primary/20'
+                  : 'hover:bg-secondary active:bg-secondary/80 border border-transparent'
+                }`}
             >
-              <span className="font-medium text-sm">{r.displayNameUz}</span>
+              <span className="font-semibold text-sm">{r.displayNameUz}</span>
               {r.key === selectedKey && <Check size={18} className="text-primary" />}
             </button>
           ))}
