@@ -51,7 +51,7 @@ export const duas: Dua[] = [
   {
     id: 'iftor-dua-3',
     category: 'iftor',
-    titleUz: "Iftorda o'qiladigan dua",
+    titleUz: "Iftorda o'qiladigan duo",
     arabic: 'اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ فَتَقَبَّلْ مِنِّي إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ',
     transliteration: "Allohumma laka sumtu va 'ala rizqika aftartu fataqabbal minni innaka antas sami'ul 'aliym.",
     translationUz: "Ey Alloh, Sen uchun ro'za tutdim va rizqing bilan og'iz ochdim, mendan qabul et, albatta Sen eshituvchi, biluvchisan.",
