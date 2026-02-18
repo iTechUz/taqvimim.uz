@@ -1,0 +1,54 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main  # Faqat main branchga push bo'lganda ishlaydi
+
+jobs:
+  # 1-bosqich: Build
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Build
+        run: npm run build
+
+      # Build natijasini (dist) keyingi job uchun saqlab qo'yamiz
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-assets
+          path: dist/
+
+  # 2-bosqich: Deploy (faqat build muvaffaqiyatli bo'lsa ishlaydi)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Build muvaffaqiyatli bo'lishini kutadi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/taqvimim.uz
+            git pull origin main
+            npm install
+            npm run build
+            sudo systemctl restart taqvimim.service
