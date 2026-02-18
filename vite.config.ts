@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["taqvimim.uz"],
     proxy: {
       '/api-namoz': {
         target: 'https://namoz-vaqti.uz',
