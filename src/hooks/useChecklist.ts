@@ -58,11 +58,21 @@ export function calculateStreak(timetable: { dateGregorian: string }[]): number 
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   for (let i = timetable.length - 1; i >= 0; i--) {
-    if (timetable[i].dateGregorian > todayStr) continue;
-    const cl = getChecklistForDate(timetable[i].dateGregorian);
-    if (cl.roza && cl.namoz) {
+    const dateStr = timetable[i].dateGregorian;
+    if (dateStr > todayStr) continue;
+    
+    const cl = getChecklistForDate(dateStr);
+    const isCompleted = Object.values(cl).every(v => v === true);
+    
+    if (isCompleted) {
       streak++;
     } else {
+      // If it's today and not completed yet, don't break the streak
+      // but also don't count it as a "completed day" for the streak yet.
+      // If it's a past day and not completed, break the streak.
+      if (dateStr === todayStr) {
+        continue;
+      }
       break;
     }
   }

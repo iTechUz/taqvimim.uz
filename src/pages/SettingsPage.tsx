@@ -27,9 +27,8 @@ export default function SettingsPage() {
             <button
               key={r.key}
               onClick={() => setRegionKey(r.key)}
-              className={`w-full flex items-center justify-between px-4 py-3 min-h-[48px] transition-colors ${
-                r.key === regionKey ? 'bg-primary/10' : 'hover:bg-secondary active:bg-secondary'
-              }`}
+              className={`w-full flex items-center justify-between px-4 py-3 min-h-[48px] transition-colors ${r.key === regionKey ? 'bg-primary/10' : 'hover:bg-secondary active:bg-secondary'
+                }`}
             >
               <span className="text-sm font-medium">{r.displayNameUz}</span>
               {r.key === regionKey && <Check size={16} className="text-primary" />}
@@ -75,9 +74,25 @@ export default function SettingsPage() {
         <div className="bg-card rounded-2xl border border-border p-4">
           <div className="flex items-start gap-3">
             <Info size={18} className="text-muted-foreground mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-sm leading-relaxed">Vaqtlar astronomik hisob-kitob asosida Aladhan API orqali olingan. Aniqlik uchun mahalliy masjid vaqtlarini tekshiring.</p>
-              <p className="text-xs text-muted-foreground mt-3">iTech Academy © 2026</p>
+            <div className="flex-1">
+              <p className="text-sm leading-relaxed mb-3">Vaqtlar astronomik hisob-kitob asosida olingan. Aniqlik uchun mahalliy masjid vaqtlarini tekshiring.</p>
+
+              <a
+                href="https://t.me/shohjahon_asqarov"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
+              >
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="text-xs">✉️</span>
+                </div>
+                <div>
+                  <p className="text-sm font-bold">Dasturchi bilan bog'lanish</p>
+                  <p className="text-[10px] text-muted-foreground">Telegram: @shohjahon_asqarov</p>
+                </div>
+              </a>
+
+              <p className="text-[10px] text-muted-foreground/50 mt-4">iTech Academy © 2026</p>
             </div>
           </div>
         </div>

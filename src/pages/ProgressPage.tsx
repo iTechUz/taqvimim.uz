@@ -13,20 +13,26 @@ export default function ProgressPage() {
 
     let completedDays = 0;
     let totalChecked = 0;
-    let totalItems = 0;
+    let totalPossibleItems = 0;
 
     timetable.forEach(d => {
-      if (d.dateGregorian > todayStr) return;
       const cl = getChecklistForDate(d.dateGregorian);
-      if (cl.roza && cl.namoz) completedDays++;
-      totalItems += 6;
-      totalChecked += Object.values(cl).filter(Boolean).length;
+      const dayCheckedCount = Object.values(cl).filter(Boolean).length;
+      const dayTotalItems = Object.keys(cl).length;
+
+      // Only count towards completedDays if all items are checked
+      if (dayTotalItems > 0 && dayCheckedCount === dayTotalItems) {
+        completedDays++;
+      }
+
+      totalPossibleItems += dayTotalItems;
+      totalChecked += dayCheckedCount;
     });
 
     return {
       completedDays,
       streak: calculateStreak(timetable),
-      avgCompletion: totalItems > 0 ? Math.round((totalChecked / totalItems) * 100) : 0,
+      avgCompletion: totalPossibleItems > 0 ? Math.round((totalChecked / totalPossibleItems) * 100) : 0,
       totalDays: timetable.length,
     };
   }, [timetable]);
