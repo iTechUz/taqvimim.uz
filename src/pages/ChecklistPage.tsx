@@ -6,14 +6,21 @@ import { ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { calculateStreak } from '@/hooks/useChecklist';
 import PageHeader from '@/components/PageHeader';
+import Quran from '../../public/icons/alquran.png'
+import mosque from '../../public/icons/mosque.png'
+import moon from '../../public/icons/moon.png'
+import duo from '../../public/icons/dua-hands.png'
+import charity from '../../public/icons/charity.png'
+import fasting from '../../public/icons/roza.png'
+
 
 const items: { key: keyof ChecklistState; label: string; emoji: string; group: 'must' | 'habit' }[] = [
-  { key: 'roza', label: "Ro'za", emoji: '🌙', group: 'must' },
-  { key: 'namoz', label: '5 vaqt namoz', emoji: '🕌', group: 'must' },
-  { key: 'quron', label: "Qur'on (10 daq)", emoji: '📖', group: 'habit' },
-  { key: 'zikr', label: 'Zikr / Duo', emoji: '🤲', group: 'habit' },
-  { key: 'sadaqa', label: 'Sadaqa', emoji: '💝', group: 'habit' },
-  { key: 'goodDeed', label: 'Yaxshi amal', emoji: '⭐', group: 'habit' },
+  { key: 'roza', label: "Ro'za", emoji: fasting, group: 'must' },
+  { key: 'namoz', label: '5 vaqt namoz', emoji: mosque, group: 'must' },
+  { key: 'quron', label: "Qur'on (10 daq)", emoji: Quran, group: 'habit' },
+  { key: 'zikr', label: 'Zikr / Duo', emoji: duo, group: 'habit' },
+  { key: 'sadaqa', label: 'Sadaqa', emoji: charity, group: 'habit' },
+  { key: 'goodDeed', label: 'Yaxshi amal', emoji: moon, group: 'habit' },
 ];
 
 export default function ChecklistPage() {
@@ -92,7 +99,7 @@ export default function ChecklistPage() {
           {items.filter(i => i.group === 'must').map(item => (
             <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[56px] cursor-pointer active:bg-secondary/50 transition-all duration-200">
               <Checkbox checked={state[item.key]} onCheckedChange={() => toggle(item.key)} className="w-5 h-5" />
-              <span className="text-lg">{item.emoji}</span>
+              <img src={item.emoji} className='w-6 h-6' alt="" />
               <span className={`text-sm font-medium transition-all duration-300 ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
               {state[item.key] && <span className="ml-auto text-xs text-green-500/80">✓</span>}
             </label>
@@ -107,7 +114,7 @@ export default function ChecklistPage() {
           {items.filter(i => i.group === 'habit').map(item => (
             <label key={item.key} className="flex items-center gap-3.5 px-4 py-4 min-h-[56px] cursor-pointer active:bg-secondary/50 transition-all duration-200">
               <Checkbox checked={state[item.key]} onCheckedChange={() => toggle(item.key)} className="w-5 h-5" />
-              <span className="text-lg">{item.emoji}</span>
+              <img src={item.emoji} className='w-6 h-6 ' alt="" />
               <span className={`text-sm font-medium transition-all duration-300 ${state[item.key] ? 'line-through text-muted-foreground' : ''}`}>{item.label}</span>
               {state[item.key] && <span className="ml-auto text-xs text-green-500/80">✓</span>}
             </label>

@@ -1,6 +1,7 @@
 import { Heart, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Dua } from '@/data/duas';
+import { useRef, useState } from 'react';
 
 interface Props {
   dua: Dua;
@@ -13,6 +14,25 @@ export default function DuaCard({ dua, isFavorite, onToggleFavorite }: Props) {
     navigator.clipboard.writeText(text).then(() => toast.success(`${label} nusxalandi`));
   };
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playAudio = () => {
+    if (!dua.audio) return;
+    if (!audioRef.current) {
+      audioRef.current = new Audio(dua.audio); 
+    }
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+  };
   return (
     <div className="glass-strong rounded-2xl p-5 space-y-4 border border-border/50 card-elevated animate-fade-in transition-all duration-300">
       <div className="flex items-center justify-between">
@@ -28,7 +48,11 @@ export default function DuaCard({ dua, isFavorite, onToggleFavorite }: Props) {
         </button>
       </div>
 
-      <div className="gradient-hero rounded-xl p-5 border border-border/30 relative overflow-hidden group" dir="rtl">
+      <div
+        className={`gradient-hero rounded-xl p-5 border border-border/30 relative overflow-hidden group cursor-pointer ${isPlaying ? 'ring-2 ring-primary' : ''}`}
+        dir="rtl"
+        onClick={playAudio} 
+      >
         <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         <p className="text-xl leading-[2.4] text-white relative z-10" style={{ fontFamily: "'Amiri', 'Traditional Arabic', serif" }}>
           {dua.arabic}

@@ -6,6 +6,11 @@ import StatusChip from '@/components/StatusChip';
 import { Settings, BookOpen, CheckSquare, Calendar, Loader2, WifiOff, Sparkles, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '@/components/ThemeToggle';
+import book from '../../public/icons/book.png'
+import helphand from '../../public/icons/help-hand.png'
+import taqvim from '../../public/icons/calendar.png'
+
+
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -139,9 +144,9 @@ export default function Home() {
       {/* Quick Actions */}
       <div className="grid grid-cols-3 gap-3 mt-4">
         {[
-          { icon: BookOpen, label: 'Duolar', path: '/duas', emoji: '📖' },
-          { icon: CheckSquare, label: 'Amallar', path: '/checklist', emoji: '✅' },
-          { icon: Calendar, label: 'Taqvim', path: '/calendar', emoji: '📅' },
+          { icon: BookOpen, label: 'Duolar', path: '/duas', emoji: book },
+          { icon: CheckSquare, label: 'Amallar', path: '/checklist', emoji: helphand },
+          { icon: Calendar, label: 'Taqvim', path: '/calendar', emoji: taqvim },
         ].map((action, i) => (
           <button
             key={action.path}
@@ -149,7 +154,7 @@ export default function Home() {
             className="glass-strong rounded-2xl p-4 border border-border/50 flex flex-col items-center gap-2 min-h-[88px] hover:border-primary/30 active:scale-95 transition-all duration-200 card-elevated animate-fade-in-up"
             style={{ animationDelay: `${0.5 + i * 0.05}s`, animationFillMode: 'both' }}
           >
-            <span className="text-2xl">{action.emoji}</span>
+            <img src={action.emoji} className=' w-8 h-8' alt="" />
             <span className="text-xs font-semibold">{action.label}</span>
           </button>
         ))}
