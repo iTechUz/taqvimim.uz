@@ -45,3 +45,4 @@ Loyihani o'z kompyuteringizda ishga tushirish uchun quyidagi qadamlarni bajaring
 
 ---
 © 2026 iTech Academy. Barcha huquqlar himoyalangan.
+# Taqvim
